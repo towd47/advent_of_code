@@ -1,13 +1,14 @@
 class Intcode_computer:
 
 	def __init__(self, intcode):
-		self.intcode = intcode.copy()
+		self.intcode = self.convert_to_dict(intcode)
 		self.input_buffer = list()
 		self.output = 0
 		self.waiting_for_input = False
 		self.finished = False
 		self.pos = 0
 		self.mode = ""
+		self.relative_base = 0
 
 	def input(self, value):
 		self.input_buffer.append(value)
@@ -40,17 +41,19 @@ class Intcode_computer:
 			self.instruction_7()
 		elif instruction == 8:
 			self.instruction_8()
+		elif instruction == 9:
+			self.instruction_9()
 		elif instruction == 99:
 			self.finished = True
 
 	def instruction_1(self):
 		pos1, pos2, pos3 = self.pos_params(3)
-		self.intcode[pos3] = self.intcode[pos1] + self.intcode[pos2]
+		self.intcode[pos3] = self.get_intcode_value(pos1) + self.get_intcode_value(pos2)
 		self.pos += 4
 
 	def instruction_2(self):
 		pos1, pos2, pos3 = self.pos_params(3)
-		self.intcode[pos3] = self.intcode[pos1] * self.intcode[pos2]
+		self.intcode[pos3] = self.get_intcode_value(pos1) * self.get_intcode_value(pos2)
 		self.pos += 4
 
 	def instruction_3(self):
@@ -63,26 +66,26 @@ class Intcode_computer:
 
 	def instruction_4(self):
 		pos1, _, _ = self.pos_params(1)
-		self.output = self.intcode[pos1]
+		self.output = self.get_intcode_value(pos1)
 		self.pos += 2
 
 	def instruction_5(self):
 		pos1, pos2, _ = self.pos_params(2)
-		if self.intcode[pos1] != 0:
-			self.pos = self.intcode[pos2]
+		if self.get_intcode_value(pos1) != 0:
+			self.pos = self.get_intcode_value(pos2)
 		else:
 			self.pos += 3
 
 	def instruction_6(self):
 		pos1, pos2, _ = self.pos_params(2)
-		if self.intcode[pos1] == 0:
-			self.pos = self.intcode[pos2]
+		if self.get_intcode_value(pos1) == 0:
+			self.pos = self.get_intcode_value(pos2)
 		else:
 			self.pos += 3
 
 	def instruction_7(self):
 		pos1, pos2, pos3 = self.pos_params(3)
-		if self.intcode[pos1] < self.intcode[pos2] :
+		if self.get_intcode_value(pos1) < self.get_intcode_value(pos2) :
 			self.intcode[pos3] = 1
 		else:
 			self.intcode[pos3] = 0
@@ -90,11 +93,15 @@ class Intcode_computer:
 
 	def instruction_8(self):
 		pos1, pos2, pos3 = self.pos_params(3)
-		if self.intcode[pos1] == self.intcode[pos2] :
+		if self.get_intcode_value(pos1) == self.get_intcode_value(pos2) :
 			self.intcode[pos3] = 1
 		else:
 			self.intcode[pos3] = 0
 		self.pos += 4
+
+	def instruction_9(self):
+		pos1, _, _ = self.pos_params(1)
+		self.relative_base += self.get_intcode_value(pos1)
 
 	def pos_params(self, num_params):
 
@@ -103,10 +110,34 @@ class Intcode_computer:
 		pos3 = self.pos + 3
 
 		if self.mode[0] == "0":
-			pos1 = self.intcode[pos1]
+			pos1 = self.get_intcode_value(pos1)
+		elif self.mode[0] == "2":
+			pos1 += self.relative_base
 		if self.mode[1] == "0" and num_params > 1:
-			pos2 = self.intcode[pos2]
+			pos2 = self.get_intcode_value(pos2)
+		elif self.mode[1] == "2":
+			pos1 += self.relative_base
 		if self.mode[2] == "0" and num_params > 2:
-			pos3 = self.intcode[pos3]
+			pos3 = self.get_intcode_value(pos3)
+		elif self.mode[2] == "2":
+			pos1 += self.relative_base
 
 		return pos1, pos2, pos3
+
+	def convert_to_dict(self, intcode):
+		intcode_dict = {}
+		for val in range(0, len(intcode)):
+			intcode_dict[val] = intcode[val]
+
+		return intcode_dict
+
+	def get_intcode_value(self, pos):
+		val = self.intcode.get(pos)
+		if val is None:
+			val = 0
+			self.intcode[pos] = 0
+		return val
+
+
+
+
