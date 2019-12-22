@@ -1,0 +1,3 @@
+*.txt
+*.class
+__pycache__
