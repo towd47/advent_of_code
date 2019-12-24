@@ -130,4 +130,5 @@ def line_points(start_pos, end_pos):
 
 	return points
 
-print(advent_3b())
+print("3a: ", advent_3a())
+print("3b: ", advent_3b())

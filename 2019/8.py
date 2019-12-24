@@ -38,7 +38,6 @@ def advent_8b():
 		image_data = image_data[width * height:]
 
 	overlap_layer = layers[0]
-	print(overlap_layer)
 
 	for layer in layers:
 		for pos in range(0, width * height) :
@@ -50,6 +49,8 @@ def advent_8b():
 		lines.append(overlap_layer[i:i+width])
 	overlap_layer = '\n'.join(lines)
 
+	overlap_layer = overlap_layer.replace('1', '#')
 	return overlap_layer.replace('0', ' ')
 
-print(advent_8b())
+print("8a: ", advent_8a())
+print("8b:\n" + advent_8b())

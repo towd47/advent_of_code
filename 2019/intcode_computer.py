@@ -9,6 +9,7 @@ class Intcode_computer:
 		self.pos = 0
 		self.mode = ""
 		self.relative_base = 0
+		self.sent_output = False
 
 	def input(self, value):
 		self.input_buffer.append(value)
@@ -18,12 +19,20 @@ class Intcode_computer:
 		while not self.finished and not self.waiting_for_input:
 			self.step()
 
+	def run_pause_on_input_and_output(self):
+		self.sent_output = False
+		while not self.finished and not self.waiting_for_input and not self.sent_output:
+			self.step()
+
 	def step(self):
-		instruction = self.intcode[self.pos] % 100
-		self.mode = str(int(self.intcode[self.pos] / 100))[::-1]
+
+		instruction = self.get_intcode_value(self.pos) % 100
+		self.mode = str(int(self.get_intcode_value(self.pos) / 100))[::-1]
 
 		while len(self.mode) < 3:
 			self.mode = self.mode + "0"
+
+		#print("STEP VALUES: ", instruction, self.mode, self.pos, self.input_buffer)
 
 		if instruction == 1:
 			self.instruction_1()
@@ -45,6 +54,8 @@ class Intcode_computer:
 			self.instruction_9()
 		elif instruction == 99:
 			self.finished = True
+		else:
+			raise ValueError("Instruction value must match an existing instruction.")
 
 	def instruction_1(self):
 		pos1, pos2, pos3 = self.pos_params(3)
@@ -67,6 +78,8 @@ class Intcode_computer:
 	def instruction_4(self):
 		pos1, _, _ = self.pos_params(1)
 		self.output = self.get_intcode_value(pos1)
+		self.sent_output = True
+		#print(self.output)
 		self.pos += 2
 
 	def instruction_5(self):
@@ -102,26 +115,28 @@ class Intcode_computer:
 	def instruction_9(self):
 		pos1, _, _ = self.pos_params(1)
 		self.relative_base += self.get_intcode_value(pos1)
+		self.pos += 2
 
 	def pos_params(self, num_params):
+		#print("PARAM VALS: ", self.mode, self.pos, self.relative_base)
 
 		pos1 = self.pos + 1
 		pos2 = self.pos + 2
 		pos3 = self.pos + 3
 
+		if self.mode[0] == "2":
+			pos1 = self.relative_base + self.get_intcode_value(pos1)
 		if self.mode[0] == "0":
 			pos1 = self.get_intcode_value(pos1)
-		elif self.mode[0] == "2":
-			pos1 += self.relative_base
+		if self.mode[1] == "2":
+			pos2 = self.relative_base + self.get_intcode_value(pos2)
 		if self.mode[1] == "0" and num_params > 1:
 			pos2 = self.get_intcode_value(pos2)
-		elif self.mode[1] == "2":
-			pos1 += self.relative_base
+		if self.mode[2] == "2":
+			pos3 = self.relative_base + self.get_intcode_value(pos3)
 		if self.mode[2] == "0" and num_params > 2:
 			pos3 = self.get_intcode_value(pos3)
-		elif self.mode[2] == "2":
-			pos1 += self.relative_base
-
+		
 		return pos1, pos2, pos3
 
 	def convert_to_dict(self, intcode):
@@ -132,11 +147,16 @@ class Intcode_computer:
 		return intcode_dict
 
 	def get_intcode_value(self, pos):
+		if pos < 0:
+			raise ValueError("Position values should be >= 0")
 		val = self.intcode.get(pos)
 		if val is None:
 			val = 0
 			self.intcode[pos] = 0
 		return val
+
+	def set_memory_value(self, address, value):
+		self.intcode[address] = value
 
 
 

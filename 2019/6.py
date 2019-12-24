@@ -138,4 +138,5 @@ class Node(object):
 	def set_depth(self, depth):
 		self.depth = depth
 
-print(advent_6b())
+print("6a: ", advent_6a())
+print("6b: ", advent_6b())

@@ -34,5 +34,5 @@ def advent_1b():
 	return total_fuel
 
 
-print(advent_1a())
-print(advent_1b())
+print("1a: ", advent_1a())
+print("1b: ", advent_1b())

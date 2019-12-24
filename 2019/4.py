@@ -47,4 +47,5 @@ def contains_exactly_two_in_a_row(num):
 		pos += 1
 	return False
 
-print(advent_4b())
+print("4a: ", advent_4a())
+print("4b: ", advent_4b())

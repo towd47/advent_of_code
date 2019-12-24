@@ -67,6 +67,6 @@ def manual():
 	intcode_base = list(map(int, intcode_str.split(",")))
 	intcode_computer.initialize_intcode(intcode_base.copy())
 
-print(advent_7a())
-print(advent_7b())
+print("7a: ", advent_7a())
+print("7b: ", advent_7b())
 

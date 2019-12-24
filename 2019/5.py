@@ -6,6 +6,16 @@ def advent_5():
 
 	intcode = list(map(int, intcode_str.split(",")))
 
-	intcode_computer.initialize_intcode(intcode)
+	comp = intcode_computer.Intcode_computer(intcode)
+	comp.input(1)
+	comp.run()
+
+	print("5a: ", comp.output)
+
+	comp = intcode_computer.Intcode_computer(intcode)
+	comp.input(5)
+	comp.run()
+
+	print("5b: ", comp.output)
 
 advent_5()
