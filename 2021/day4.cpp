@@ -5,6 +5,7 @@
 #include <sstream>
 
 int day_4_part_1();
+int day_4_part_2();
 bool check_bingo(std::vector<std::string> card);
 int check_bingos(std::vector<std::vector<std::string>> cards);
 void tic_number_on_card(std::vector<std::string> &card, std::string number_to_check);
@@ -15,6 +16,9 @@ int main(int argc, char const *argv[])
 
 	int day_4_part_1_answer = day_4_part_1();
 	std::cout << "Day 4 Part 1: " << day_4_part_1_answer << std::endl;
+
+	int day_4_part_2_answer = day_4_part_2();
+	std::cout << "Day 4 Part 2: " << day_4_part_2_answer << std::endl;
 
 	return 0;
 }
@@ -69,6 +73,85 @@ int day_4_part_1() {
 	}
 
 	int card_num = check_bingos(cards);
+	while (card_num == -1) {
+		tic_number_on_all_cards(cards, *it);
+		it++;
+		card_num = check_bingos(cards);
+	}
+	it--;
+	int final_num = stoi(*it);
+
+	std::vector<std::string> winning_card = cards.at(card_num);
+	int card_sum = 0;
+
+	for (auto e : winning_card) {
+		if (e != "x") {
+			card_sum += stoi(e);
+		}
+	}
+
+	return card_sum * final_num;
+}
+
+int day_4_part_2() {
+	std::string line;
+	std::ifstream day_4_input ("day_4_input.txt");
+
+	std::vector<std::string> data;
+
+	while (getline(day_4_input, line)) {
+		data.push_back(line);
+	}
+
+	std::vector<std::string> called_numbers;
+
+	std::istringstream called_numbers_stream(data.at(0));
+
+	while (called_numbers_stream) {
+		std::string number;
+		if (!getline(called_numbers_stream, number, ',')) break;
+		called_numbers.push_back(number);
+	}
+
+	data.erase(begin(data));
+	data.erase(begin(data));
+
+	std::vector<std::vector<std::string>> cards;
+	std::vector<std::string> card;
+
+	for (auto e : data) {
+		if (!e.empty()) {
+			std::istringstream ss(e);
+			while (ss) {
+				std::string number;
+				if (!getline(ss, number, ' ')) 
+					break;
+				if (!number.empty())
+					card.push_back(number);
+			}
+		}
+		else {
+			cards.push_back(card);
+			card.clear();
+		}
+	}
+
+	auto it = begin(called_numbers);
+	for (int i = 0; i < 5; i++) {
+		tic_number_on_all_cards(cards, *it);
+		it++;
+	}
+
+	int card_num = check_bingos(cards);
+	while (cards.size() > 1) {
+		tic_number_on_all_cards(cards, *it);
+		it++;
+		card_num = check_bingos(cards);
+		while (card_num != -1) {
+			cards.erase(cards.begin() + card_num);
+			card_num = check_bingos(cards);
+		}
+	}
 	while (card_num == -1) {
 		tic_number_on_all_cards(cards, *it);
 		it++;
