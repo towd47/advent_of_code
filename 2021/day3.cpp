@@ -29,7 +29,6 @@ int main(int argc, char const *argv[])
 std::vector<std::string> get_input() {
 	std::string word;
 	std::ifstream day_3_input ("day_3_input.txt");
-
 	std::vector<std::string> data;
 
 	while (day_3_input >> word) {
@@ -59,28 +58,25 @@ int day_3_part_2(std::vector<std::string> data) {
 	std::bitset<12> co2(co2_value);
 
 	return oxygen.to_ulong() * co2.to_ulong();
-
 }
 
 std::string most_common_or_least_common_by_bit(std::vector<std::string> v, bool most) {
 	int pos = 0;
+	auto should_erase = [](auto it, auto pos, auto most, auto most_common_bit) {
+		if (most)
+			return (it -> at(pos) != most_common_bit);
+		else
+			return (it -> at(pos) == most_common_bit);
+	};
 
 	while (v.size() > 1) {
 		char most_common_bit = most_common_bit_at(v, pos);
 
 		for (auto it = begin(v); it != end(v); ) {
-			if (most) {
-				if (it -> at(pos) != most_common_bit)
-					it = v.erase(it);
-				else
-					it++;
-			}
-			else {
-				if (it -> at(pos) == most_common_bit)
-					it = v.erase(it);
-				else
-					it++;
-			}
+			if (should_erase(it, pos, most, most_common_bit))
+				it = v.erase(it);
+			else
+				it++;
 		}
 		pos++;
 	}
