@@ -6,6 +6,7 @@
 
 int day_4_part_1();
 int day_4_part_2();
+std::vector<std::vector<std::string>> create_cards(std::vector<std::string> &called_numbers);
 bool check_bingo(std::vector<std::string> card);
 int check_bingos(std::vector<std::vector<std::string>> cards);
 void tic_number_on_card(std::vector<std::string> &card, std::string number_to_check);
@@ -23,7 +24,7 @@ int main(int argc, char const *argv[])
 	return 0;
 }
 
-int day_4_part_1() {
+std::vector<std::vector<std::string>> create_cards(std::vector<std::string> &called_numbers) {
 	std::string line;
 	std::ifstream day_4_input ("day_4_input.txt");
 
@@ -32,8 +33,6 @@ int day_4_part_1() {
 	while (getline(day_4_input, line)) {
 		data.push_back(line);
 	}
-
-	std::vector<std::string> called_numbers;
 
 	std::istringstream called_numbers_stream(data.at(0));
 
@@ -65,6 +64,13 @@ int day_4_part_1() {
 			card.clear();
 		}
 	}
+
+	return cards;
+}
+
+int day_4_part_1() {
+	std::vector<std::string> called_numbers;
+	auto cards = create_cards(called_numbers);
 
 	auto it = begin(called_numbers);
 	for (int i = 0; i < 5; i++) {
@@ -94,47 +100,8 @@ int day_4_part_1() {
 }
 
 int day_4_part_2() {
-	std::string line;
-	std::ifstream day_4_input ("day_4_input.txt");
-
-	std::vector<std::string> data;
-
-	while (getline(day_4_input, line)) {
-		data.push_back(line);
-	}
-
 	std::vector<std::string> called_numbers;
-
-	std::istringstream called_numbers_stream(data.at(0));
-
-	while (called_numbers_stream) {
-		std::string number;
-		if (!getline(called_numbers_stream, number, ',')) break;
-		called_numbers.push_back(number);
-	}
-
-	data.erase(begin(data));
-	data.erase(begin(data));
-
-	std::vector<std::vector<std::string>> cards;
-	std::vector<std::string> card;
-
-	for (auto e : data) {
-		if (!e.empty()) {
-			std::istringstream ss(e);
-			while (ss) {
-				std::string number;
-				if (!getline(ss, number, ' ')) 
-					break;
-				if (!number.empty())
-					card.push_back(number);
-			}
-		}
-		else {
-			cards.push_back(card);
-			card.clear();
-		}
-	}
+	auto cards = create_cards(called_numbers);
 
 	auto it = begin(called_numbers);
 	for (int i = 0; i < 5; i++) {
