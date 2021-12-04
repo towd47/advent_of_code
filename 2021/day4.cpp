@@ -6,6 +6,7 @@
 
 int day_4_part_1();
 int day_4_part_2();
+int sum_card(std::vector<std::string> card);
 std::vector<std::vector<std::string>> create_cards(std::vector<std::string> &called_numbers);
 bool check_bingo(std::vector<std::string> card);
 int check_bingos(std::vector<std::vector<std::string>> cards);
@@ -88,27 +89,28 @@ int day_4_part_1() {
 	int final_num = stoi(*it);
 
 	std::vector<std::string> winning_card = cards.at(card_num);
-	int card_sum = 0;
-
-	for (auto e : winning_card) {
-		if (e != "x") {
-			card_sum += stoi(e);
-		}
-	}
-
+	
+	int card_sum = sum_card(winning_card);
+	
 	return card_sum * final_num;
 }
 
 int day_4_part_2() {
+
+	// generate bingo cards and the order of numbers from input
 	std::vector<std::string> called_numbers;
 	auto cards = create_cards(called_numbers);
 
+
+	// check first 5 numbers on cards
 	auto it = begin(called_numbers);
 	for (int i = 0; i < 5; i++) {
 		tic_number_on_all_cards(cards, *it);
 		it++;
 	}
 
+
+	// removes all cards with bingos while continuing to check of numbers until only 1 card remains
 	int card_num = check_bingos(cards);
 	while (cards.size() > 1) {
 		tic_number_on_all_cards(cards, *it);
@@ -119,24 +121,35 @@ int day_4_part_2() {
 			card_num = check_bingos(cards);
 		}
 	}
+
+	// continues until bingo exists on final card
 	while (card_num == -1) {
 		tic_number_on_all_cards(cards, *it);
 		it++;
 		card_num = check_bingos(cards);
 	}
 	it--;
-	int final_num = stoi(*it);
 
-	std::vector<std::string> winning_card = cards.at(card_num);
+
+	// calculates bingo card result
+	int final_num = stoi(*it);
+	auto final_card = cards.at(card_num);
+	
+	auto card_sum = sum_card(final_card);
+
+	return card_sum * final_num;
+}
+
+int sum_card(std::vector<std::string> card) {
 	int card_sum = 0;
 
-	for (auto e : winning_card) {
+	for (auto e : card) {
 		if (e != "x") {
 			card_sum += stoi(e);
 		}
 	}
 
-	return card_sum * final_num;
+	return card_sum;
 }
 
 int check_bingos(std::vector<std::vector<std::string>> cards) {
