@@ -60,7 +60,6 @@ for fold in folds:
 max_x = 0
 max_y = 0
 for dot in dots:
-	print(dot)
 	max_x = max(max_x, dot[0])
 	max_y = max(max_y, dot[1])
 
