@@ -32,24 +32,19 @@ score_grid[0][0] = risks[0][0]
 adj = adjacent_pts(0, 0, rows, cols)
 pts_to_check = [[0, 0]]
 while pts_to_check:
-	# for z in range(len(score_grid)):
-	# 	print(score_grid[z])
-	# input()
-	ad = pts_to_check.pop()
+	ad = pts_to_check.pop(0)
 	ads_ads = adjacent_pts(ad[0], ad[1], rows, cols)
-	ad_score = score_grid[ad[0]][ad[1]]
 	for ads_ad in ads_ads:
-		if ad_score > score_grid[ads_ad[0]][ads_ad[1]] + risks[ad[0]][ad[1]]:
+		if score_grid[ad[0]][ad[1]] > score_grid[ads_ad[0]][ads_ad[1]] + risks[ad[0]][ad[1]]:
 			score_grid[ad[0]][ad[1]] = score_grid[ads_ad[0]][ads_ad[1]] + risks[ad[0]][ad[1]]
 			for ads_ad in ads_ads:
 				if ads_ad not in pts_to_check:
 					pts_to_check.append(ads_ad)
-		elif ad_score + risks[ads_ad[0]][ads_ad[1]] < score_grid[ads_ad[0]][ads_ad[1]]:
-			score_grid[ads_ad[0]][ads_ad[1]] = ad_score + risks[ads_ad[0]][ads_ad[1]]
-			pts_to_check.append(ads_ad)
-				
+		elif score_grid[ad[0]][ad[1]] + risks[ads_ad[0]][ads_ad[1]] < score_grid[ads_ad[0]][ads_ad[1]]:
+			score_grid[ads_ad[0]][ads_ad[1]] = score_grid[ad[0]][ad[1]] + risks[ads_ad[0]][ads_ad[1]]
+			pts_to_check.append(ads_ad)				
 				
 
-print(score_grid)
+print(score_grid[rows - 1][cols - 1] - score_grid[0][0])
 
 
