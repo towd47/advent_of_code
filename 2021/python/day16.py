@@ -1,3 +1,5 @@
+import math
+
 VERSION_SIZE = 3
 TYPE_SIZE = 3
 LENGTH_TYPE_SIZE = 1
@@ -12,15 +14,9 @@ def literal(bits, index):
 	index += 1
 	num = num + bits[index:index + 4]
 	index += 4
-	return num, index
+	return int(num, 2), index
 
 def get_next_bits(num, bits, index):
-	# print(index)
-	# print(num)
-	# print(bits)
-	# val = int(bits[index:index+num], 2)
-	# print(val)
-	# print()
 	return int(bits[index:index+num], 2), index + num
 
 def process_packet(bits, index):
@@ -32,17 +28,44 @@ def process_packet(bits, index):
 		num, index = literal(bits, index)
 	else:
 		length_type, index = get_next_bits(LENGTH_TYPE_SIZE, bits, index)
+		inner_packets = []
 		if length_type == 0:
 			sublength, index = get_next_bits(15, bits, index)
 			start_index = index
 			while index < start_index + sublength:
 				vp, nump, index = process_packet(bits, index)
 				v += vp
+				inner_packets.append(nump)
 		else:
 			num_sub_packets, index = get_next_bits(11, bits, index)
 			for i in range(num_sub_packets):
 				vp, nump, index = process_packet(bits, index)
 				v += vp
+				inner_packets.append(nump)
+		if t == 0:
+			num = sum(inner_packets)
+		elif t == 1:
+			num = math.prod(inner_packets)
+		elif t == 2:
+			num = min(inner_packets)
+		elif t == 3:
+			num = max(inner_packets)
+		elif t == 5:
+			if inner_packets[0] > inner_packets[1]:
+				num = 1
+			else:
+				num = 0
+		elif t == 6:
+			if inner_packets[0] < inner_packets[1]:
+				num = 1
+			else:
+				num = 0
+		elif t == 7:
+			if inner_packets[0] == inner_packets[1]:
+				num = 1
+			else:
+				num = 0
+				
 	return v, num, index
 
 
@@ -56,6 +79,7 @@ while len(bits) % 4 != 0:
 index = 0
 v, num, index = process_packet(bits, index)
 print(v)
+print(num)
 
 
 
