@@ -40,9 +40,17 @@ image = []
 for i in range(2, len(data)):
 	image.append(data[i].strip())
 
-image = extend_img(image, 5)
-image = enhance_img(image, enhancement_algo)
-image = enhance_img(image, enhancement_algo)
+image = extend_img(image, 52)
+for i in range(50):
+	if i == 2:
+		lit_count = 0
+		for x in image:
+			lit_count += x.count('#')
+
+		print(lit_count)
+	if i % 2 == 0:
+		image = extend_img(image, 2)
+	image = enhance_img(image, enhancement_algo)
 
 lit_count = 0
 for x in image:
