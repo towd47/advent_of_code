@@ -54,11 +54,6 @@ basin_size = 0
 basins = []
 
 while poses_to_check:
-	for r in depths:
-		for c in r:
-			print(c, end=' ')
-		print()
-	input()
 	[x, y] = poses_to_check.pop()
 	if depths[x][y] != 'x':
 		if depths[x][y] != 9:
