@@ -1,3 +1,5 @@
+import copy
+
 def adjust_form(snail_num):
 	nums = []
 	depths = []
@@ -31,13 +33,7 @@ def adjust_form(snail_num):
 
 def reduce(snail_num, depths):
 	changed = True
-	# step = 0
 	while changed:
-		# print("STEP", step)
-		# print(snail_num)
-		# print(depths)
-		# step += 1
-		# print()
 		changed = False
 		for i in range(len(depths)):
 			# EXPLODE
@@ -123,10 +119,6 @@ def reduce(snail_num, depths):
 def total_magnitude(snail_num, depths):
 	pos = 0
 	while len(snail_num) > 1:
-		# print(pos)
-		# print(snail_num)
-		# print(depths)
-		# print()
 		if snail_num[pos][0] != 'z' and snail_num[pos][1] != 'x':
 			if pos > 0 and snail_num[pos - 1][1] == 'x' and depths[pos - 1] == depths[pos] - 1:
 				snail_num[pos - 1][1] = magnitude(snail_num[pos])
@@ -151,51 +143,58 @@ def total_magnitude(snail_num, depths):
 def magnitude(num):
 	return num[0] * 3 + num[1] * 2
 
+def add_snail_nums(snail_num1, snail_num2, depths1, depths2):
+	snail_num = copy.deepcopy(snail_num1)
+	snail_numb = copy.deepcopy(snail_num2)
+	snail_num.extend(snail_numb)
+	depths = depths1.copy()
+	depths.extend(depths2)
+	depths = [x+1 for x in depths]
+	return snail_num, depths
+
 day18_input = open("../day_18_input.txt")
 data = day18_input.readlines()
+all_snail_nums = []
+all_depths = []
 added_nums = []
 added_depths = []
-# step = 1
+line_no = 0
 for line in data:
 	line = line.strip()
 	nums, depths = adjust_form(line)
 	nums, depths = reduce(nums, depths)
+
 	if added_nums:
-		added_nums.extend(nums)
-		added_depths.extend(depths)
-		added_depths = [x+1 for x in added_depths]
+		added_nums, added_depths = add_snail_nums(added_nums, nums, added_depths, depths)
 		added_nums, added_depths = reduce(added_nums, added_depths)
 	else:
 		added_nums = nums
 		added_depths = depths
-	# print(added_nums)
-	# print(added_depths)
-	# print('step', step)
-	# print()
-	# step += 1
-
-print(added_nums)
-print(added_depths)
 
 print(total_magnitude(added_nums, added_depths))
 
+for line in data:
+	line = line.strip()
+	nums, depths = adjust_form(line)
+	nums, depths = reduce(nums, depths)
+
+	all_snail_nums.append(nums.copy())
+	all_depths.append(depths.copy())
+
+largest_magnitude = 0
+for i in range(len(all_snail_nums)):
+	for j in range(i + 1, len(all_snail_nums)):
+		nums, depths = add_snail_nums(all_snail_nums[i], all_snail_nums[j], all_depths[i], all_depths[j])
+		nums, depths = reduce(nums, depths)
+		largest_magnitude = max(largest_magnitude, total_magnitude(nums, depths))
+		nums, depths = add_snail_nums(all_snail_nums[j], all_snail_nums[i], all_depths[j], all_depths[i])
+		nums, depths = reduce(nums, depths)
+		largest_magnitude = max(largest_magnitude, total_magnitude(nums, depths))
+		
+print(largest_magnitude)
 
 
 
 
-# TESTING
 
-# a = '[[[[3,0],[5,3]],[4,4]],[5,5]]'
-# nums, depths = adjust_form(a)
-# print(total_magnitude(nums, depths))
 
-# a = '[[[[[4,0],[5,4]],[[7,7],[6,0]]],[[8,[7,7]],[[7,9],[5,0]]]],[[2,[[0,8],[3,4]]],[[[6,7],1],[7,[1,6]]]]]'
-# nums, depths = adjust_form(a)
-# print('ADJUSTED')
-# print(nums)
-# print(depths)
-
-# nums, depths = reduce(nums, depths)
-# print('REDUCED')
-# print(nums)
-# print(depths)
