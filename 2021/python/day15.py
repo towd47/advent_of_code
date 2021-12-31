@@ -1,11 +1,25 @@
+import heapq
+
 INPUT_PATH = "../inputs/day_15_input.txt"
 
 class Point:
 	row = 0
 	col = 0
+	score = 0
 
-def adjacent_pts(row, col, rows, cols):
+	def __lt__(self, other):
+		return self.score < other.score
+
+	def id(self):
+		return self.row * 10000 + self.col
+
+	def __str__(self):
+		return "Row: " + str(self.row) + " Col: " + str(self.col) + " Score: " + str(self.score)
+
+def adjacent_pts(point, rows, cols):
 	pts = []
+	row = point.row
+	col = point.col
 	if row != 0:
 		pt = Point()
 		pt.row = row - 1
@@ -28,6 +42,29 @@ def adjacent_pts(row, col, rows, cols):
 		pts.append(pt)
 	return pts
 
+def best_first(risks):
+	start = Point()
+	start.score = risks[0][0]
+
+	points = {}
+	points[start.id()] = start
+	points_to_check = [start]
+	heapq.heapify(points_to_check)
+
+	rows = len(risks)
+	cols = len(risks[0])
+	while points_to_check:
+		point = heapq.heappop(points_to_check)
+		adj = adjacent_pts(point, rows, cols)
+		for pt in adj:
+			if pt.id() not in points:
+				pt.score = point.score + risks[pt.row][pt.col]
+				points[pt.id()] = pt
+				heapq.heappush(points_to_check, pt)
+
+	end = points[(rows - 1) * 10000 + cols - 1]
+
+	print(end.score - start.score)
 
 day15_input = open(INPUT_PATH)
 data = day15_input.readlines()
@@ -36,39 +73,6 @@ risks = []
 for x in data:
 	x = x.strip()
 	risks.append(list(map(int, list(x))))
-
-score_grid = []
-for x in range(len(risks[0])):
-	score_grid.append([10000] * len(risks))
-
-rows = len(risks)
-cols = len(risks[0])
-
-def find_scores(risks, score_grid):
-	rows = len(risks)
-	cols = len(risks[0])
-
-	score_grid[0][0] = risks[0][0]
-
-	adj = adjacent_pts(0, 0, rows, cols)
-	start = Point()
-	pts_to_check = [start]
-	while pts_to_check:
-		point = pts_to_check.pop(0)
-		adjacents = adjacent_pts(point.row, point.col, rows, cols)
-		for adj_point in adjacents:
-			if score_grid[point.row][point.col] > score_grid[adj_point.row][adj_point.col] + risks[point.row][point.col]:
-				score_grid[point.row][point.col] = score_grid[adj_point.row][adj_point.col] + risks[point.row][point.col]
-				for adj_point in adjacents:
-					if adj_point not in pts_to_check:
-						pts_to_check.append(adj_point)
-			elif score_grid[point.row][point.col] + risks[adj_point.row][adj_point.col] < score_grid[adj_point.row][adj_point.col]:
-				score_grid[adj_point.row][adj_point.col] = score_grid[point.row][point.col] + risks[adj_point.row][adj_point.col]
-				pts_to_check.append(adj_point)	
-	return score_grid			
-				
-score_grid = find_scores(risks, score_grid)
-print(score_grid[rows - 1][cols - 1] - score_grid[0][0])
 
 big_risks = []
 for j in range(5):
@@ -79,13 +83,5 @@ for j in range(5):
 			new_risks.extend(new_risk)
 		big_risks.append(new_risks)
 
-big_score_grid = []
-for x in range(len(big_risks[0])):
-	big_score_grid.append([10000] * len(big_risks))
-
-rows = len(big_risks)
-cols = len(big_risks[0])
-
-big_score_grid = find_scores(big_risks, big_score_grid)
-
-print(big_score_grid[rows-1][cols-1] - big_score_grid[0][0])
+best_first(risks)
+best_first(big_risks)
