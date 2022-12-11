@@ -1,3 +1,5 @@
+INPUT_PATH = "../inputs/day_11_input.txt"
+
 def next_step_octopus(octopus):
 	flashes = 0
 	rows = len(octopus)
@@ -59,7 +61,7 @@ def adjacent_pts(x, y, rows, cols):
 
 	return adj
 
-day11_input = open("../day_11_input.txt")
+day11_input = open(INPUT_PATH)
 data = day11_input.readlines()
 
 octopus = []

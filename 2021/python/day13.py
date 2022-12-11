@@ -1,3 +1,5 @@
+INPUT_PATH = "../inputs/day_13_input.txt"
+
 def fold_dots(dots, fold_pos, fold_direction):
 	if fold_direction == 'x':
 		coord = 0
@@ -30,7 +32,7 @@ def print_grid(grid):
 			line = line + grid[x][y]
 		print(line)
 
-day13_input = open("../day_13_input.txt")
+day13_input = open(INPUT_PATH)
 data = day13_input.readlines()
 
 dots = set()

@@ -1,3 +1,5 @@
+INPUT_PATH = "../inputs/day_8_input.txt"
+
 def decode(digits):
 	key_map = [""] * 10
 	left_to_decode = []
@@ -38,7 +40,7 @@ def decode(digits):
 
 	return key_map
 
-day8_input = open("../day_8_input.txt")
+day8_input = open(INPUT_PATH)
 data = day8_input.readlines()
 
 vals = [2, 3, 4, 7]

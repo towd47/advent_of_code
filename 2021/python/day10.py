@@ -1,5 +1,7 @@
 import statistics
 
+INPUT_PATH = "../inputs/day_10_input.txt"
+
 def is_open_char(c):
 	open_chars = ['(', '[', '{', '<']
 	return c in open_chars
@@ -43,7 +45,7 @@ def score_chars(chars):
 
 	return score
 
-day10_input = open("../day_10_input.txt")
+day10_input = open(INPUT_PATH)
 data = day10_input.readlines()
 
 incomplete = []

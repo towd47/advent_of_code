@@ -1,3 +1,5 @@
+INPUT_PATH = "../inputs/day_12_input.txt"
+
 def find_path(cave_system, path, current_location):
 	paths = []
 	for i in cave_system[current_location]:
@@ -24,7 +26,7 @@ def find_path_two_visits(cave_system, path, current_location, small_repeated = F
 	return paths
 
 
-day12_input = open("../day_12_input.txt")
+day12_input = open(INPUT_PATH)
 data = day12_input.readlines()
 
 cave_system = {}

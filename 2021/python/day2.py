@@ -1,4 +1,6 @@
-day2_input = open("../day_2_input.txt")
+INPUT_PATH = "../inputs/day_2_input.txt"
+
+day2_input = open(INPUT_PATH)
 data = day2_input.readlines()
 
 horiz = 0

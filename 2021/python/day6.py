@@ -1,3 +1,5 @@
+INPUT_PATH = "../inputs/day_6_input.txt"
+
 def total_fish(starting_fish, days):
 	fish = starting_fish.copy()
 	index = 0
@@ -9,7 +11,7 @@ def total_fish(starting_fish, days):
 
 	return sum(fish) + sum(new_fish_buffer)
 
-day6_input = open("../day_6_input.txt")
+day6_input = open(INPUT_PATH)
 data = day6_input.readline().split(',')
 
 starting_fish = [0] * 7

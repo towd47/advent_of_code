@@ -1,10 +1,16 @@
 import copy
 
+INPUT_PATH = "../inputs/day_18_input.txt"
+
 def adjust_form(snail_num):
+	# [[[3, 4], 8], [2, 1]]
+	# [[3, 4], [z, 8], [2, 1]]
+	# [3, 2, 2]
 	nums = []
 	depths = []
 	num = []
 	depth = 0
+	non_nums = ['[', ']', ',']
 	for i in range(len(snail_num)):
 		cur_depth = depth
 		char = snail_num[i]
@@ -15,11 +21,10 @@ def adjust_form(snail_num):
 			
 		elif char == ']':
 			depth -= 1
-		elif char != ',':
+		elif char != ',': # char is number
 			if snail_num[i - 1] == ',' and snail_num[i - 2] == ']':
 				num.append('z')
-			non_nums = ['[', ']', ',']
-			if snail_num[i-1] in non_nums:
+			if snail_num[i - 1] in non_nums:
 				while snail_num[i + 1] not in non_nums:
 					char = char + snail_num[i+1]
 					i += 1
@@ -29,7 +34,6 @@ def adjust_form(snail_num):
 			num = []
 			depths.append(cur_depth)
 	return nums, depths
-
 
 def reduce(snail_num, depths):
 	changed = True
@@ -152,7 +156,7 @@ def add_snail_nums(snail_num1, snail_num2, depths1, depths2):
 	depths = [x+1 for x in depths]
 	return snail_num, depths
 
-day18_input = open("../day_18_input.txt")
+day18_input = open(INPUT_PATH)
 data = day18_input.readlines()
 all_snail_nums = []
 all_depths = []

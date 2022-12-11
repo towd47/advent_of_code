@@ -1,3 +1,5 @@
+INPUT_PATH = "../inputs/day_14_input.txt"
+
 def apply_rules(current_pairs, rules):
 	new_pairs = {}
 
@@ -32,7 +34,7 @@ def score_pairs(current_pairs):
 	return max(starting_letters.values()) - min(starting_letters.values())
 
 # READ INPUT INTO EXISTING PAIRS AND RULES
-day14_input = open("../day_14_input.txt")
+day14_input = open(INPUT_PATH)
 data = day14_input.readlines()
 
 template = data[0].strip()

@@ -1,3 +1,5 @@
+INPUT_PATH = "../inputs/day_9_input.txt"
+
 def is_low_point(depths, row, col):
 	point = depths[row][col]
 	rows = len(depths)
@@ -21,7 +23,7 @@ def adjacent_pts(pt, rows, cols):
 	return pts
 
 
-day9_input = open("../day_9_input.txt")
+day9_input = open(INPUT_PATH)
 data = day9_input.readlines()
 
 depths = []

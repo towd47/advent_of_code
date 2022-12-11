@@ -1,5 +1,4 @@
-# 5362 TOO HIGH 
-# 4942 TOO HIGH
+INPUT_PATH = "../inputs/day_20_input.txt"
 
 def extend_img(image, num=1):
 	char = '.'
@@ -31,7 +30,7 @@ def enhance_img(extended_image, enhancement_algo):
 		enhanced_image[i] = enhanced_image[i][1:-1]
 	return enhanced_image
 
-day20_input = open("../day_20_input.txt")
+day20_input = open(INPUT_PATH)
 data = day20_input.readlines()
 
 enhancement_algo = data[0].strip()
@@ -40,7 +39,7 @@ image = []
 for i in range(2, len(data)):
 	image.append(data[i].strip())
 
-image = extend_img(image, 52)
+# image = extend_img(image, 1)
 for i in range(50):
 	if i == 2:
 		lit_count = 0
@@ -49,7 +48,7 @@ for i in range(50):
 
 		print(lit_count)
 	if i % 2 == 0:
-		image = extend_img(image, 2)
+		image = extend_img(image, 4)
 	image = enhance_img(image, enhancement_algo)
 
 lit_count = 0

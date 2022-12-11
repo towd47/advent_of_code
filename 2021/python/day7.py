@@ -1,6 +1,8 @@
 import statistics
 
-day7_input = open("../day_7_input.txt")
+INPUT_PATH = "../inputs/day_7_input.txt"
+
+day7_input = open(INPUT_PATH)
 data = day7_input.readline()
 
 locations = []

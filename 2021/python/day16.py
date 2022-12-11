@@ -3,6 +3,7 @@ import math
 VERSION_SIZE = 3
 TYPE_SIZE = 3
 LENGTH_TYPE_SIZE = 1
+INPUT_PATH = "../inputs/day_16_input.txt"
 
 
 def literal(bits, index):
@@ -69,7 +70,7 @@ def process_packet(bits, index):
 	return v, num, index
 
 
-day16_input = open("../day_16_input.txt")
+day16_input = open(INPUT_PATH)
 outer_packet = day16_input.readline().strip()
 
 bits = str(bin(int(outer_packet, 16))[2:])

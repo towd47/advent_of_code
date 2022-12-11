@@ -2,23 +2,7 @@
 #include <string>
 #include <fstream>
 #include <cstring>
-
-int day_2_part_1();
-
-int day_2_part_2();
-
-int main(int argc, char const *argv[])
-{
-	int day_2_part_1_result = day_2_part_1();
-
-	std::cout << "Day 2 Part 1: " << day_2_part_1_result << "\n";
-
-	int day_2_part_2_result = day_2_part_2();
-
-	std::cout << "Day 2 Part 2: " << day_2_part_2_result << "\n";
-
-	return 0;
-}
+#include "day2.hpp"
 
 int day_2_part_1() {
 	std::string word;

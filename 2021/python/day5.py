@@ -1,3 +1,5 @@
+INPUT_PATH = "../inputs/day_5_input.txt"
+
 def is_horiz(y1, y2):
 	if y1 == y2:
 		return True
@@ -8,7 +10,7 @@ def is_vert(x1, x2):
 		return True
 	return False
 
-day5_input = open("../day_5_input.txt")
+day5_input = open(INPUT_PATH)
 data = day5_input.readlines()
 
 pts = {}
