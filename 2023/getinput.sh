@@ -12,7 +12,7 @@
 # using the development tools within the browser.
 KEYFILE="session.key"
 
-url="https://adventofcode.com/2022/day/${1}/input"
+url="https://adventofcode.com/2023/day/${1}/input"
 key=`cat ${KEYFILE}`
 
 curl --cookie "session=${key}" ${url}
