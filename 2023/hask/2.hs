@@ -55,7 +55,7 @@ areValid = Data.List.all isValidAmount
 
 
 listPulls :: [Text] -> [Text]
-listPulls [s] = Data.List.concat (map (splitOn (pack ", ")) (splitOn (pack "; ") s))
+listPulls [s] = Prelude.concatMap (splitOn (pack ", ")) (splitOn (pack "; ") s)
 
 isValidAmount :: String -> Bool
 isValidAmount s = read (unpack x) <= getMax (unpack y)
