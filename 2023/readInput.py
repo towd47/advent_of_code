@@ -5,4 +5,6 @@ def yieldLines(filename):
 
 def linesToList(filename):
 	with open(f'inputs/{filename}', 'r') as f:
-		return f.readlines()
+		lines = f.readlines()
+		lines = [line.strip() for line in lines]
+		return lines

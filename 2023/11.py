@@ -1,32 +1,20 @@
 import readInput
 
+def getRowsAndColsToExpand(lines):
+    rowsToExpand = []
 
+    for i, line in enumerate(lines):
+        if len(set(line)) == 1 and line[0] == ".":
+            rowsToExpand.append(i)
 
-lines = readInput.linesToList("11")
+    transposed = ["".join(s) for s in zip(*lines)]
 
-expandedHLines = []
+    colsToExpand = []
+    for i, line in enumerate(transposed):
+        if len(set(line)) == 1 and line[0] == ".":
+            colsToExpand.append(i)
 
-for line in lines:
-    line = line.strip()
-    if len(set(line)) == 1 and line[0] == ".":
-        expandedHLines.append(line)
-    expandedHLines.append(line)
-
-transposed = ["".join(s) for s in zip(*expandedHLines)]
-
-expandedSpace = []
-for line in transposed:
-    if len(set(line)) == 1 and line[0] == ".":
-        expandedSpace.append(line)
-    expandedSpace.append(line)
-
-expandedSpace = ["".join(s) for s in zip(*expandedSpace)]
-
-galaxies = []
-for ri, row in enumerate(expandedSpace):
-    for ci, col in enumerate(row):
-        if expandedSpace[ri][ci] == "#":
-            galaxies.append((ri, ci))
+    return (rowsToExpand, colsToExpand)
 
 def sumDistances(galaxies):
     sumPaths = 0
@@ -36,4 +24,28 @@ def sumDistances(galaxies):
             sumPaths += abs(gal[0] - galComp[0]) + abs(gal[1] - galComp[1])
     return sumPaths
 
-print(sumDistances(galaxies))
+def getGalaxies(lines, factor, rte, cte):
+    galaxies = []
+    for ri, row in enumerate(lines):
+        for ci, _ in enumerate(row):
+            if lines[ri][ci] == "#":
+                expandedRowCount = len(list(filter(lambda x : x < ri, rte)))
+                expandedColCount = len(list(filter(lambda x : x < ci, cte)))
+                r1 = expandedRowCount * factor + ri - expandedRowCount
+                c2 = expandedColCount * factor + ci - expandedColCount
+                galaxies.append((r1, c2))
+    return galaxies
+
+def solve():
+    lines = readInput.linesToList("11")
+
+    rowsToExpand, colsToExpand = getRowsAndColsToExpand(lines)
+
+    galaxies1 = getGalaxies(lines, 2, rowsToExpand, colsToExpand)
+    galaxies2 = getGalaxies(lines, 1_000_000, rowsToExpand, colsToExpand)
+
+    print(sumDistances(galaxies1))
+    print(sumDistances(galaxies2))
+
+if __name__ == "__main__":
+    solve()
