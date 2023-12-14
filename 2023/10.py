@@ -35,6 +35,27 @@ def isValid(node, rows, cols):
 		return False
 	return True
 
+def setOfAllEdges(chain):
+	edgeSet = set()
+	for i, e in enumerate(chain):
+		j = (i+1) % len(chain)
+		edgeSet.update(allEdges(e, chain[j]))
+	return edgeSet
+
+def allEdges(p1, p2):
+	edges = set()
+	if p1[0] == p2[0]:
+		if p1[0] > p2[0]: edgeRange = range(p2[1], p1[1] + 1)
+		else: edgeRange = range(p1[1], p2[1] + 1)
+		for i in edgeRange:
+			edges.add((p1[0], i))
+	else:
+		if p1[1] > p2[1]: edgeRange = range(p2[0], p1[0] + 1)
+		else: edgeRange = range(p1[0], p2[0] + 1)
+		for i in edgeRange:
+			edges.add((p1[1], i))
+	return edges
+
 lines = readInput.linesToList("10")
 strippedLines = []
 for line in lines:
@@ -82,9 +103,34 @@ for node in nodesToStartFrom:
 	else:
 		break
 
-print(chain)
 print(int(len(chain) / 2))
 
+doubledChain = [(x * 2, y * 2) for (x, y) in chain]
+
+chainSet = setOfAllEdges(doubledChain)
+
+edgeSet = set()
+for i in range(cols * 2):
+	edgeSet.add((0, i))
+	edgeSet.add((rows * 2 - 1, i))
+for i in range(rows * 2):
+	edgeSet.add((i, 0))
+	edgeSet.add((i, cols * 2 - 1))
+
+visitedSet = set()
+visitedSet.update(chainSet)
+for x in edgeSet:
+	if x in visitedSet:
+		continue
+	nodesToCheck = [x]
+	while nodesToCheck:
+		node = nodesToCheck.pop()
+		visitedSet.add(node)
+		adj = getAdj(node, rows * 2, cols * 2)
+		for y in adj:
+			if y not in visitedSet:
+				nodesToCheck.append(y)
+print(len(visitedSet) / (rows * 2 * cols * 2))
 
 
 
