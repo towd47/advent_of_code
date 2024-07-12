@@ -33,9 +33,7 @@ def findPattern(turns, nodes, cn):
     return steps
 
 def solve():
-
     lines = readInput.yieldLines("8")
-
     turns = next(lines).strip()
     next(lines)
 
