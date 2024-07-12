@@ -13,23 +13,6 @@ def getAdj(coord, rows, cols):
 		adj.append((row, col + 1))
 	return adj
 
-def getAdjS(coord, rows, cols, lines):
-	row, col = coord
-	adj = []
-	if row != 0:
-		if lines[row - 1][col] == "F" or lines[row - 1][col] == "7" or lines[row - 1][col] == "|":
-			adj.append((row - 1, col))
-	if row < rows - 1:
-		if lines[row + 1][col] == "L" or lines[row + 1][col] == "J" or lines[row + 1][col] == "|":
-			adj.append((row + 1, col))
-	if col != 0:
-		if lines[row][col - 1] == "L" or lines[row][col - 1] == "F" or lines[row][col - 1] == "-":
-			adj.append((row, col - 1))
-	if col < cols - 1:
-		if lines[row][col + 7] == "7" or lines[row][col + 7] == "J" or lines[row][col + 1] == "-":
-			adj.append((row, col + 1))
-	return adj
-
 def getAdjByLetter(coord, l):
 	if l == "-":
 		return [(coord[0], coord[1] - 1), (coord[0], coord[1] + 1)]
@@ -101,7 +84,7 @@ def getChain(lines, sPos):
 
 	chain = [sPos]
 
-	nodesToStartFrom = getAdjS(sPos, rows, cols, lines)
+	nodesToStartFrom = getAdj(sPos, rows, cols)
 
 	for node in nodesToStartFrom:
 		nodes.add(node)
@@ -132,48 +115,27 @@ def newDir(l, dir):
 	if l == "-" or l == "|":
 		return dir
 	if l == "7" or l == "L" or l == "S":
-		return rotateRight(dir)
-	if l == "J" or l == "F":
+		if dir[0] == 0:
+			return rotateRight(dir)
 		return rotateLeft(dir)
+	if l == "J" or l == "F":
+		if dir[0] == 0:
+			return rotateLeft(dir)
+		return rotateRight(dir)
 	return (-1, -1)
 
-# (0, 1) F (1, 0)
-
 def rotateLeft(dir):
-	return (dir[1], dir[0])
+	return (dir[1], dir[0] * -1)
 
 def rotateRight(dir):
-	return (dir[1] * -1, dir[0] * -1)
-
-def printGrid(rows, cols, chainSet):
-	for i in range(rows):
-		line = ""
-		for j in range(cols):
-			if (i, j) in chainSet:
-				line += "#"
-			else:
-				line += "."
-		print(line)
-
-def printWithInsidePts(rows, cols, chainset, visited, lines):
-	for i in range(rows):
-		line = ""
-		for j in range(cols):
-			if (i, j) in chainSet:
-				line += lines[i][j]
-			elif (i, j) in visited:
-				line += "#"
-			else:
-				line += "."
-		print(line)
-
+	return (dir[1] * -1, dir[0])
 
 lines, sPos = getGridAndSPos("10")
 chain = getChain(lines, sPos)
 print(int(len(chain) / 2))
 
-rows = len(lines)
-cols = len(lines[0])
+rows = len(lines[0])
+cols = len(lines)
 
 chainSet = setOfAllEdges(chain)
 chain = [(x, y, lines[x][y]) for (x, y) in chain]
@@ -182,32 +144,32 @@ for i, e in enumerate(chain):
 	if (e[0] < highest[0]):
 		highest = (e[0], i)
 
+print(highest)
 
 insidePoints = []
 startPoint = chain[highest[1]]
-d = (1, 0)
+dir = (1, 0)
 
-for i in range(highest[1], len(chain) + highest[1]):
+for i in range(highest[0], len(chain) + highest[0]):
 	i = i % len(chain)
-	p2 = applyDir(chain[i], d)
-	if i != highest[1]:
-		d = newDir(chain[i][2], d)
-	p = applyDir(chain[i], d)
-	if p not in chainSet:
-		insidePoints.append(p)
-	if p2 not in chainSet:
-		insidePoints.append(p2)
+	if i != highest[0]:
+		dir = newDir(chain[i][2], dir)
+	insidePoints.append(applyDir(chain[i], dir))
 
-visited = set()
-visited.update(chainSet)
-
-while insidePoints:
-	pt = insidePoints.pop()
-	if pt in visited:
+visitedSet = set()
+visitedSet.update(chainSet)
+for x in insidePoints:
+	if x in visitedSet:
 		continue
-	visited.add(pt)
-	adj = getAdj(pt, rows, cols)
-	insidePoints.extend(adj)
+	nodesToCheck = [x]
+	while nodesToCheck:
+		node = nodesToCheck.pop()
+		visitedSet.add(node)
+		adj = getAdj(node, rows, cols)
+		for y in adj:
+			if y not in visitedSet:
+				nodesToCheck.append(y)
 
-print(len(visited) - len(chainSet))
+print(len(visitedSet) - len(chain))
+
 

@@ -14,11 +14,18 @@ def part1(turns, nodes):
     print(steps)
 
 def part2(turns, nodes, startNodes):
+<<<<<<< HEAD
+    return
+
+
+lines = readInput.yieldLines("8")
+=======
     zs = []
     for cn in startNodes:
         z = findPattern(turns, nodes, cn)
         zs.append(z)
     print(math.lcm(*zs))
+>>>>>>> 65135535f46716d7ac010ebe3ecfd179ff2fadd4
 
 
 def findPattern(turns, nodes, cn):

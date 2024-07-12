@@ -64,5 +64,8 @@ def dist(c1, c2):
 def getGridSpace(coord, grid):
     return grid[coord[0]][coord[1]]
     
+def p1():
+    return
+
 if __name__ == "__main__":
     solve()
