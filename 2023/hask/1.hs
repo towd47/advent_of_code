@@ -2,6 +2,7 @@ import Data.Char
 import Data.List (isPrefixOf)
 import Data.Maybe (fromMaybe, fromJust, catMaybes, mapMaybe)
 
+main :: IO ()
 main = do
     s <- readFile "../inputs/1"
     print $ totS (lines s) 0

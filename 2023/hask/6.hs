@@ -6,4 +6,4 @@ import Data.Bool
 main = do
     a <- readFile "../inputs/6"
     print $ parse a
-parse = map (read @Int) . words . map (bool ' ' <*> isDigit)
+parse = map (read @Int) . words . map (bool ' ' <*> isDigit) 

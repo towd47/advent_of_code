@@ -6,5 +6,8 @@ def readGrid(f):
 def solve():
     grid = readGrid("tests")
     
+def p1():
+    return
+
 if __name__ == "__main__":
     solve()

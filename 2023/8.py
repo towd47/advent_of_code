@@ -12,6 +12,10 @@ def part1(turns, nodes):
         steps += 1
     print(steps)
 
+def part2(turns, nodes, startNodes):
+    return
+
+
 lines = readInput.yieldLines("8")
 
 turns = next(lines)
