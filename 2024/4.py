@@ -9,17 +9,13 @@ def solve(filename='4'):
 	print(p2take2(lines))
 
 def p1(lines):
-	horiz_lines = lines.copy()
-	vert_lines = [''.join(s) for s in zip(*horiz_lines)]
-	diag_lines = [''.join(s) for s in diagonals(horiz_lines)]
-	antidiag_lines = [''.join(s) for s in antidiagonals(horiz_lines)]
+	lines1 = lines.copy()
+	lines1.extend([''.join(s) for s in zip(*lines)])
+	lines1.extend([''.join(s) for s in diagonals(lines)])
+	lines1.extend([''.join(s) for s in antidiagonals(lines)])
 
-	horiz_lines.extend(vert_lines)
-	horiz_lines.extend(diag_lines)
-	horiz_lines.extend(antidiag_lines)
-
-	fw = sum([len(re.findall(r'(XMAS)', line)) for line in horiz_lines])
-	bw = sum([len(re.findall(r'(SAMX)', line)) for line in horiz_lines])
+	fw = sum([len(re.findall(r'(XMAS)', line)) for line in lines1])
+	bw = sum([len(re.findall(r'(SAMX)', line)) for line in lines1])
 
 	return fw + bw
 
@@ -41,14 +37,29 @@ def p2(lines):
 		antidiag_occurrences[i] = set(e) | set(antidiag_occurrences2[i])
 
 	for i, e in enumerate(diag_occurrences):
-		diag_occurrences[i] = set([(rows - 1 - i + e2,e2) if i <= rows - 1 else (e2,i-rows+1+e2) for e2 in e])
+		diag_occurrences[i] = set([diagToCoord(rows, e2, i) for e2 in e])
 
 	for i, e in enumerate(antidiag_occurrences):
-		antidiag_occurrences[i] = set([(i - e2,e2) if i <= rows - 1 else (rows-e2-1, i-rows+1+e2) for e2 in e])
+		antidiag_occurrences[i] = set([antidiagToCoord(rows, e2, i) for e2 in e])
 
 	s1 = set.union(*diag_occurrences)
 	s2 = set.union(*antidiag_occurrences)
 	return len(s1 & s2)
+
+def diagonals(lines):
+	rows, cols = len(lines), len(lines[0])
+	return [[lines[rows - p + q - 1][q] for q in range(max(p-rows+1, 0), min(p+1, cols))] for p in range(rows + cols - 1)]
+
+def antidiagonals(lines):
+	rows, cols = len(lines), len(lines[0])
+	return [[lines[p - q][q] for q in range(max(p-rows+1,0), min(p+1, cols))] for p in range(rows + cols - 1)]
+
+def diagToCoord(rows, val, rowpos):
+	return (rows - 1 - rowpos + val,val) if rowpos <= rows - 1 else (val,rowpos-rows+1+val)
+
+def antidiagToCoord(rows, val, rowpos):
+	return (rowpos - val,val) if rowpos <= rows - 1 else (rows-val-1, rowpos-rows+1+val)
+
 
 def p2take2(lines):
 	rows = len(lines)
@@ -66,13 +77,6 @@ def checkPos(lines, pos):
 	d2 = (lines[row-1][col+1] == 'M' and lines[row+1][col-1] == 'S') or (lines[row-1][col+1] == 'S' and lines[row+1][col-1] == 'M')
 	return d1 and d2
 
-def diagonals(lines):
-	rows, cols = len(lines), len(lines[0])
-	return [[lines[rows - p + q - 1][q] for q in range(max(p-rows+1, 0), min(p+1, cols))] for p in range(rows + cols - 1)]
-
-def antidiagonals(lines):
-	rows, cols = len(lines), len(lines[0])
-	return [[lines[p - q][q] for q in range(max(p-rows+1,0), min(p+1, cols))] for p in range(rows + cols - 1)]
 
 if __name__ == '__main__':
 	if len(sys.argv) >= 2:
