@@ -6,6 +6,7 @@ def solve(filename='4'):
 	lines = linesToList(filename)
 	print(p1(lines))
 	print(p2(lines))
+	print(p2take2(lines))
 
 def p1(lines):
 	horiz_lines = lines.copy()
@@ -48,6 +49,22 @@ def p2(lines):
 	s1 = set.union(*diag_occurrences)
 	s2 = set.union(*antidiag_occurrences)
 	return len(s1 & s2)
+
+def p2take2(lines):
+	rows = len(lines)
+	cols = len(lines[0])
+	s = [sum([checkPos(lines, (row, col)) if lines[row][col] == 'A' else False for col, _ in enumerate(row_vals)]) for row, row_vals in enumerate(lines)]
+	return sum(s)
+
+def checkPos(lines, pos):
+	row = pos[0]
+	col = pos[1]
+	if row < 1 or col < 1 or row >= len(lines) - 1 or col >= len(lines[0]) - 1:
+		return False
+
+	d1 = (lines[row-1][col-1] == 'M' and lines[row+1][col+1] == 'S') or (lines[row-1][col-1] == 'S' and lines[row+1][col+1] == 'M')
+	d2 = (lines[row-1][col+1] == 'M' and lines[row+1][col-1] == 'S') or (lines[row-1][col+1] == 'S' and lines[row+1][col-1] == 'M')
+	return d1 and d2
 
 def diagonals(lines):
 	rows, cols = len(lines), len(lines[0])
