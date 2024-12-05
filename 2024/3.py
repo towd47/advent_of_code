@@ -3,13 +3,13 @@ import re
 import sys
 
 def solve(filename='3'):
-	lines = [line.strip() for line in yieldLines(filename)]
+	lines = [line for line in yieldLines(filename)]
 	lines = "".join(lines)
 	print(p1(lines))
 	print(p2(lines))
 
 def p1(lines):
-	matches = re.findall(r'mul\((\d+,\d+)\)', lines)
+	matches = re.findall(r'mul\(([\d]{1,3},[\d]{1,3})\)', lines)
 	return sum([int(m) * int(n) for m, n in (match.split(',') for match in matches)])
 
 def p2(lines):

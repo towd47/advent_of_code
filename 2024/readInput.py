@@ -8,3 +8,7 @@ def linesToList(filename):
 		lines = f.readlines()
 		lines = [line.strip() for line in lines]
 		return lines
+
+def oneString(filename):
+	with open(f'inputs/{filename}', 'r') as f:
+		return f.read()
