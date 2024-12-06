@@ -6,6 +6,7 @@ def solve(filename='6'):
 	startPos, startDir = findStartPos(lines)
 
 	print(p1Clean(startPos, startDir, lines))
+	print(p2(startPos, startDir, lines))
 
 def findStartPos(lines):
 	dirs = ['^', '>', 'v', '<']
@@ -23,6 +24,43 @@ def p1Clean(currPos, currDir, lines):
 		currDir = res[1]
 
 	return len(pts)
+
+def p2(startPos, startDir, lines):
+	lines = [list(line) for line in lines]
+	currPos = startPos
+	currDir = startDir
+	pts = set()
+	turnpts = set()
+
+	while res := step(currPos, currDir, lines):
+		pt, d = res
+		if pt == currPos:
+			turnpts.add(pt)
+			currDir = d
+		else:
+			pts.add(pt)
+			currPos = pt
+
+	pts.discard(startPos)
+
+	tot = 0
+	for pt in pts:
+		lines[pt[0]][pt[1]] = '#'
+		if doesItLoop(startPos, startDir, lines):
+			tot += 1
+		lines[pt[0]][pt[1]] = '.'
+	return tot
+
+def doesItLoop(currPos, currDir, lines):
+	pts = set()
+	pts.add((currPos, currDir))
+	while res := step(currPos, currDir, lines):
+		if res in pts:
+			return True
+		pts.add(res)
+		currPos = res[0]
+		currDir = res[1]
+	return False
 
 def step(currPos, currDir, lines):
 	row, col = currPos
