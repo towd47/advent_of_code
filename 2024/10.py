@@ -5,7 +5,10 @@ import sys
 def solve(filename='10'):
     grid = linesToList(filename)
     grid = [[int(x) for x in list(line)] for line in grid]
-    
+    p1(grid)
+    p2(grid)
+
+def p1(grid):
     startPts = []
     for i, e in enumerate(grid):
         for j, e2 in enumerate(e):
@@ -34,6 +37,28 @@ def solve(filename='10'):
                             visitedCoords.add(a)
 
     print(tot)
+
+def p2(grid):
+    startPts = []
+    for i, e in enumerate(grid):
+        for j, e2 in enumerate(e):
+            if e2 == 0:
+                startPts.append(Coord(i, j))
+
+    print(sum([step(pt, grid) for pt in startPts]))
+
+
+def step(currPos, grid):
+    if currPos.val(grid) == 9:
+        return 1
+
+    adjacent = [pos for pos in currPos.adjacent() if pos.inBounds(len(grid), len(grid[0])) and pos.val(grid) == currPos.val(grid) + 1]
+    if not adjacent:
+        return 0
+
+    return sum([step(pos, grid) for pos in adjacent])
+
+
 
 if __name__ == '__main__':
     if len(sys.argv) >= 2:
