@@ -4,7 +4,10 @@ import sys
 def solve(filename='9'):
     diskmap = oneString(filename)
     diskmap = [int(c) for c in diskmap.strip()]
+    p1(diskmap)
+    p2(diskmap)
 
+def p1(diskmap):
     emptyposes = []
     existingposes = []
     diskvals = []
@@ -45,6 +48,51 @@ def solve(filename='9'):
     tot = 0
     for i, e in enumerate(diskvals):
         tot += sum([e[0] * i for i in range(pos, pos + e[1])])
+        pos += e[1]
+
+    print(tot)
+
+def p2(diskmap):
+    emptyposes = []
+    existingposes = []
+    diskvals = []
+
+    for i, e in enumerate(diskmap):
+        if i % 2 == 0:
+            block = [int(i/2), e]
+            diskvals.append(block)
+            existingposes.append(i)
+        else:
+            diskvals.append([None,e])
+            emptyposes.append(i)
+
+    existingposes.reverse()
+    p = 0
+    while p < len(existingposes):
+        pos = existingposes[p]
+        p += 1
+        for i, epos in enumerate(emptyposes):
+            if epos >= pos or epos >= len(diskvals):
+                break
+            diff = diskvals[epos][1] - diskvals[pos][1]
+            if diff > 0:
+                diskvals[epos][1] = diff
+                movedVal = diskvals[pos]
+                diskvals[pos] = [None, diskvals[pos][1]] 
+                diskvals.insert(epos, movedVal)
+                emptyposes = emptyposes[:i] + [x + 1 for x in emptyposes[i:]]
+                existingposes = [x + 1 if x >= epos else x for x in existingposes]
+                break
+            elif diff == 0:
+                diskvals[epos] = diskvals[pos]
+                diskvals[pos] = [None, diskvals[pos][1]]
+                del emptyposes[i]
+                break
+    
+    pos = 0
+    tot = 0
+    for i, e in enumerate(diskvals):
+        tot += sum([e[0] * i if e[0] != None else 0 for i in range(pos, pos + e[1])])
         pos += e[1]
 
     print(tot)
