@@ -51,6 +51,11 @@ class Coord:
     def __eq__(self, coord):
         return self.row == coord.row and self.col == coord.col
 
+    def __lt__(self, other):
+        if self.row == other.row:
+            return self.col < other.col
+        return self.row < other.row
+
     def __attrs(self):
         return (self.row, self.col)
 
