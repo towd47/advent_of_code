@@ -28,10 +28,38 @@ def solve(filename='14'):
                 q3 += 1
             elif y > ymid:
                 q4 += 1
-        print(x, y)
     print(q1*q2*q3*q4)
 
+    steps = 0
+    while True:
+        bots = doStep(bots)
+        steps += 1
+        bottomHalf = set()
+        leftHalf = set()
+        for bot in bots:
+            if bot[1] > 51:
+                bottomHalf.add((bot[0], bot[1]))
+            if bot[0] < 50:
+                leftHalf.add((bot[0], bot[1]))
+        if len(bottomHalf) < len(bots) / 3 and len(leftHalf) < len(bots) / 3:
+            printBots(bots)
+            print(steps)
+            break
 
+def printBots(bots):
+    line = ['.' for _ in range(101)] 
+    grid = [line.copy() for _ in range(103)] 
+    for bot in bots:
+        grid[bot[1]][bot[0]] = '#'
+    for line in grid:
+        print("".join(line))
+
+def doStep(bots):
+    for bot in bots:
+        x, y = calcPos(bot, 1)
+        bot[0] = x
+        bot[1] = y
+    return bots
 
 def calcPosA(bot, steps):
     xpos = (bot[0] + bot[2] * steps) % 11

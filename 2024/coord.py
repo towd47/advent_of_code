@@ -33,6 +33,18 @@ class Coord:
     def val(self, grid):
         return grid[self.row][self.col]
 
+    def cUp(coord):
+        return coord.up()
+
+    def cDown(coord):
+        return coord.down()
+
+    def cLeft(coord):
+        return coord.left()
+
+    def cRight(coord):
+        return coord.right()
+
     def __str__(self):
         return f"{self.row}, {self.col}"
 
