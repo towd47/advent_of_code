@@ -16,36 +16,31 @@ def solve(filename='18'):
     walls = set()
     [walls.add(c) for c in coords[:1024]]
 
-    steps = stepsToFinish(Coord(0, 0), Coord(70, 70), 71, 71, walls)
+    steps = stepsToFinish(walls)
     print(steps)
-    print(len(coords))
 
     num = 1024
-    dist = 0
-    startpos = Coord(0, 0)
+    maxNum = len(coords) - 1
+
+    done = False
+    while not done:
+        mid = (maxNum + num) // 2
+        if maxNum - num <= 1:
+            done = True
+        walls = set(coords[:mid])
+        steps = stepsToFinish(walls)
+        if steps:
+            num = mid
+        else:
+            maxNum = mid
+    
+    print(coords[maxNum])
+
+def stepsToFinish(walls):
+    currpos = Coord(0, 0)
     endpos = Coord(70, 70)
     rows = 71
     cols = 71
-    path = [startpos]
-    while ptPop := bestFirstPath(startpos, endpos, rows, cols, walls, dist, path):
-        pathset = set(path)
-        blocked = False
-        blockedPos = None
-        while not blocked:
-            c = coords[num]
-            num += 1
-            walls.add(c)
-            if c in pathset:
-                blocked = True
-                blockedPos = path.index(c)
-        dist = blockedPos - 1
-        startPos = path[blockedPos - 1]
-        path = path[:blockedPos]
-    print(coords[num - 1])
-
-
-def stepsToFinish(startpos, endpos, rows, cols, walls):
-    currpos = startpos
     ptsToCheck = [(currpos, 0)]
     visited = set()
     visited.add(currpos)
