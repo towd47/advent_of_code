@@ -34,7 +34,7 @@ def solve(filename='18'):
         else:
             maxNum = mid
     
-    print(coords[maxNum])
+    print(coords[maxNum-1])
 
 def stepsToFinish(walls):
     currpos = Coord(0, 0)
@@ -53,20 +53,6 @@ def stepsToFinish(walls):
                 return dist + 1
             visited.add(a)
             ptsToCheck.append((a, dist + 1))
-    return None
-
-def bestFirstPath(startpos, endpos, rows, cols, walls, dist, path):
-    pts = []
-    heapq.heappush(pts, (priority(startpos, endpos, dist), startpos, dist, path))
-    while pts:
-        ptPop = heapq.heappop(pts)
-        _, pt, dist, path = ptPop
-        adj = [adj for adj in pt.adjacent() if adj not in walls and adj.inBounds(rows, cols)]
-        for a in adj:
-            if a == endpos:
-                return ptPop
-            heapq.heappush(pts, (priority(a, endpos, dist + 1), a, dist + 1, path + [a]))
-
     return None
 
 def priority(pos, endpos, steps):
