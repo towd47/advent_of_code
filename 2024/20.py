@@ -17,7 +17,6 @@ def solve(filename = '20'):
                 track.add(Coord(row, col))
                 endpt = Coord(row, col)
     
-    print(len(track))
     trackOrder = [startpt]
     trackSoFar = set()
     pt = startpt
@@ -29,25 +28,24 @@ def solve(filename = '20'):
                 trackOrder.append(a)
                 pt = a
                 break
-    print('Finished track')
 
-    adjDict = {}
+    print(countCheats(trackOrder, 2, 100))
+    print(countCheats(trackOrder, 20, 100))
+    
+def countCheats(trackOrder, cheatDist, cheatMin):
+    cheats = 0
+    trackIndex = dict()
     for i, p in enumerate(trackOrder):
-        adjDict[p] = []
-        dist2 = p.coordsAtDist(2)
-        for c in dist2:
-            if c in track:
-                distSaved = trackOrder.index(c) - i - 2
-                if distSaved > 0:
-                    adjDict[p].append((c, distSaved))
+        trackIndex[p] = i
 
-    cheatsFor100Plus = 0
-    for p in adjDict:
-        for cheat in adjDict[p]:
-            if cheat[1] >= 100:
-                cheatsFor100Plus += 1
+    for i, p in enumerate(trackOrder[:-100]):
+        for j, p2 in enumerate(trackOrder[i+100:]):
+            dist = p.mDist(p2)
+            cutLen = trackIndex[p2] - i - dist
+            if dist <= cheatDist and cutLen >= cheatMin:
+                cheats += 1
 
-    print(cheatsFor100Plus)
+    return cheats
 
 if __name__ == '__main__':
     if len(sys.argv) >= 2:
