@@ -45,6 +45,26 @@ class Coord:
     def cRight(coord):
         return coord.right()
 
+    def mDist(self, coord):
+        return abs(self.row - coord.row) + abs(self.col - coord.col)
+
+    def coordsAtDist(self, dist):
+        crds = []
+        for i in range(1, dist):
+            c1 = Coord(dist - i, i)
+            c2 = Coord(dist - i, i * -1)
+            crds.append(self.add(c1))
+            crds.append(self.sub(c1))
+            crds.append(self.add(c2))
+            crds.append(self.sub(c2))
+        c1 = Coord(dist, 0)
+        c2 = Coord(0, dist)
+        crds.append(self.add(c1))
+        crds.append(self.sub(c1))
+        crds.append(self.add(c2))
+        crds.append(self.sub(c2))
+        return crds
+
     def __str__(self):
         return f"{self.row}, {self.col}"
 
