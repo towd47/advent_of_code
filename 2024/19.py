@@ -13,14 +13,17 @@ def solve(filename='19'):
 
 def solvable(goal, patterns):
     possibilities = []
-    for p in patterns:
-        if goal == p:
-            return True
-        if goal.startswith(p):
-            possibilities.append((goal[len(p):], patterns))
-    for p in possibilities:
-        if solvable(p[0], p[1]):
-            return True
+    poses = set()
+    poses.add(0)
+    for i, _ in enumerate(goal):
+        if i not in poses:
+            continue
+
+        for p in patterns:
+            if goal[i:] == p:
+                return True
+            if goal[i:].startswith(p):
+                poses.add(i + len(p))
     return False
 
 if __name__ == '__main__':
