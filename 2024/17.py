@@ -111,7 +111,6 @@ def doOperator(op, opand, out, regs):
                 return opand
         case 4:
             regs['B'] = regs['B'] ^ regs['C']
-            comboValue(opand, regs)
         case 5:
             out.append(comboValue(opand, regs) % 8)
         case 6:
