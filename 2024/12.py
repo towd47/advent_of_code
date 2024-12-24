@@ -18,7 +18,34 @@ def solve(filename='12'):
 
     print(sum([calcPrice(a, grid) for a in areas]))
 
-    
+    tot = 0
+    for area in areas:
+        edges = set()
+        for pt in area:
+            if pt.left() not in area:
+                edges.add((pt, 'l'))
+            if pt.right() not in area:
+                edges.add((pt, 'r'))
+            if pt.up() not in area:
+                edges.add((pt, 'u'))
+            if pt.down() not in area:
+                edges.add((pt, 'd'))
+        sides = 0
+        while edges:
+            edge = edges.pop()
+            sides += 1
+            if edge[1] in ['l', 'r']:
+                dirs = [Coord.up, Coord.down]
+            else:
+                dirs = [Coord.left, Coord.right]
+            for d in dirs:
+                pos = edge[0]
+                while (d(pos), edge[1]) in edges:
+                    edges.remove((d(pos), edge[1]))
+                    pos = d(pos)
+        tot += len(area) * sides
+    print(tot)
+
 def findArea(pt, grid):
     area = set()
     area.add(pt)
