@@ -18,6 +18,7 @@ def solve(filename='24'):
         gates.append((ins, out))
 
     p1(vals, gates)
+    p2(vals, gates)
 
 def p1(vals, gates):
     while gates:
@@ -33,6 +34,23 @@ def p1(vals, gates):
     zVals.reverse()
     b = ''.join([str(vals[v]) for v in zVals])
     print(int(b, 2))
+
+def p2(vals, gates):
+    xb, yb, zb = getBxyz(vals)
+    expectedVal = int(xb, 2) + int(yb, 2)
+    expectedVal = f'{expectedVal:b}'
+    for i, (v1, v2) in enumerate(zip(zb, expectedVal)):
+        if v1 != v2:
+            print(i, v1, v2)
+
+def getBxyz(vals):
+    bs = []
+    for c in 'xyz':
+        vs = [v for v in vals if v.startswith(c)]
+        vs.sort()
+        vs.reverse()
+        bs.append(''.join([str(vals[v]) for v in vs]))
+    return bs
 
 def doOp(ins, vals):
     v1 = ins[0]
