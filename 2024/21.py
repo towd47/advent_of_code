@@ -2,18 +2,19 @@ from readInput import yieldLines
 import sys
 
 buttonMap = {}
-buttonMap['1'] = (0, 0)
-buttonMap['2'] = (0, 1)
-buttonMap['3'] = (0, 2)
+buttonMap['7'] = (0, 0)
+buttonMap['8'] = (0, 1)
+buttonMap['9'] = (0, 2)
 buttonMap['4'] = (1, 0)
 buttonMap['5'] = (1, 1)
 buttonMap['6'] = (1, 2)
-buttonMap['7'] = (2, 0)
-buttonMap['8'] = (2, 1)
-buttonMap['9'] = (2, 2)
+buttonMap['1'] = (2, 0)
+buttonMap['2'] = (2, 1)
+buttonMap['3'] = (2, 2)
 buttonMap['0'] = (3, 1)
 buttonMap['A'] = (3, 2)
 buttonPrio = '^>v<'
+buttonPrio2 = '<v^>'
 
 arrowMap = {}
 arrowMap['^'] = (0, 1)
@@ -21,20 +22,26 @@ arrowMap['A'] = (0, 2)
 arrowMap['<'] = (1, 0)
 arrowMap['v'] = (1, 1)
 arrowMap['>'] = (1, 2)
-arrowPrio = 'v>^<'
+arrowPrio = 'v><^'
+arrowPrio2 = '<^v>'
 
 def solve(filename='21'):
     lines = yieldLines(filename)
     lines = [line.strip() for line in lines]
 
-    sequence = ''
+    tot = 0
     for code in lines:
+        print(code)
         start = buttonMap['A']
         numSeq = ''
         for c in code:
             end = buttonMap[c]
             dirs = getDirs(start, end)
-            for p in buttonPrio:
+            if (start[0] == 3 or end[0] == 3) and (start[1] == 0 or end[1] == 0):
+                prio = buttonPrio
+            else:
+                prio = buttonPrio2
+            for p in prio:
                 if p in dirs:
                     numSeq = numSeq + p * dirs[p]
             numSeq = numSeq + 'A'
@@ -72,8 +79,27 @@ def solve(filename='21'):
             start = end
         print(arrowSeq1)
         print(len(arrowSeq1))
+        val = int(code[:-1])
+        tot += val * len(arrowSeq1)
+    print(tot)
 
-                
+def arrowBot(sequence):
+    start = arrowMap['A']
+    arrowSeq = ''
+    for c in sequence:
+        end = arrowMap[c]
+        if start != end:
+            dirs = getDirs(start, end)
+            for p in arrowPrio:
+                if p in dirs:
+                    arrowSeq = arrowSeq + p * dirs[p]
+            arrowSeq += 'A'
+        else:
+            arrowSeq += 'A'
+        start = end
+    return arrowSeq
+
+
 
 def numMoves(p1, p2):
     dirs = list(getDirs(p1, p2).keys())
@@ -182,4 +208,12 @@ if __name__ == '__main__':
 #     arrow robot 2 needs input
 #         v<<a>>^aaa<av<a>>^aavaa<^a>a
         
-    
+# 379A
+# v<<A>>^AvA^Av<<A>>^AAv<A<A>>^AAvAA^<A>Av<A>^AA<A>Av<A<A>>^AAAvA^<A>A
+# <v<A>>^AvA^A<vA<AA>>^AAvA<^A>AAvA^A<vA>^AA<A>A<v<A>A>^AAAvA<^A>A
+# ---<---A->-A---<---AA--v-<---AA->>--^-A--v--AA-^-A--v-<---AAA->--^-A
+# ---<---A->-A--v-<<---AA->--^-AA->-A--v--AA-^-A---<-v--AAA->--^-A
+# -------^---A-------^^--------<<-------A----->>---A--------vvv------A
+# -------^---A---------<<------^^---A----->>---A--------vvv------A
+# -----------3--------------------------7----------9-----------------A
+# -----------3----------------------7----------9-----------------A
